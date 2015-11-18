@@ -13,5 +13,9 @@
   },
   "dependencies": {
     "request": "^2.66.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ibirrer/svrz-scraper.git"
   }
 }
