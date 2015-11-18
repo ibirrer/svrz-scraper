@@ -1,0 +1,17 @@
+{
+  "name": "svrz-scraper",
+  "version": "0.0.1",
+  "description": "scrapes the tournament schedule, ranking and game results from svrz.ch",
+  "main": "index.js",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "author": "ibirrer@gmail.com",
+  "license": "ISC",
+  "devDependencies": {
+    "jasmine": "^2.3.2"
+  },
+  "dependencies": {
+    "request": "^2.66.0"
+  }
+}
