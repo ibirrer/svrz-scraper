@@ -1,4 +1,4 @@
-/*jslint node: true, esnext: true */
+/*jslint node: true */
 "use strict";
 
 var cheerio = require("cheerio");

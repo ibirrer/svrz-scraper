@@ -1,4 +1,4 @@
-/*jslint node: true, jasmine: true, esnext: true */
+/*jslint node: true, jasmine: true */
 "use strict";
 
 var scraper = require("../main.js");
