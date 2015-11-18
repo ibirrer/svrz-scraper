@@ -1,6 +1,6 @@
 {
   "name": "svrz-scraper",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "scrapes the tournament schedule, ranking and game results from svrz.ch",
   "main": "index.js",
   "scripts": {
