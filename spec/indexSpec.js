@@ -1,7 +1,7 @@
 /*jslint node: true, jasmine: true */
 "use strict";
 
-var scraper = require("../main.js");
+var scraper = require("../index.js");
 
 describe("scrape", function() {
     it("normal", function(done) {

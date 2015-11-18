@@ -12,6 +12,7 @@
     "jasmine": "^2.3.2"
   },
   "dependencies": {
+    "cheerio": "^0.19.0",
     "request": "^2.66.0"
   },
   "repository": {
