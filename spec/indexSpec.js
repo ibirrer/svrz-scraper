@@ -16,6 +16,8 @@ describe("scrape", function() {
         var jquery = cheerio.load(html);
         var scraped = scraper.scrape(jquery);
 
+        expect(scraped.leagueId).toBe("9446");
+
         expect(scraped.ranking.map(x => x.rank)).toEqual([1, 2, 3, 4, 5]);
         expect(scraped.ranking[3].team).toBe("Raz Faz");
         expect(scraped.ranking[3].games).toBe(3);

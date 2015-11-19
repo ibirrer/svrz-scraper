@@ -8,12 +8,11 @@ function scrape(jquery) {
         throw ("failed to scrape league");
     }
 
-    var games = [];
-    rows
+    var games = rows
         .slice(1) // skip table header
-        .each(function() { // map rows to document
+        .map(function() { // map rows to document
             var cols = jquery(this).children();
-            games.push({
+            return {
                 id: +cols.eq(1).text(),
                 team: cols.eq(3).text(),
                 teamId: +extractTeamIdFromLink(cols.eq(3).find('a').attr("href")),
@@ -22,27 +21,26 @@ function scrape(jquery) {
                 opponent: cols.eq(5).text(),
                 opponentId: +extractTeamIdFromLink(cols.eq(5).find('a').attr("href")),
                 result: convertResult(cols.eq(6).text())
-            });
+            };
+        }).get();
 
-            return true;
-        });
-
-    var ranking = [];
-    jquery('table.tx_clicsvws_pi1_mainTableGroupRankingTable > tr')
+    var leagueId;
+    var ranking = jquery('table.tx_clicsvws_pi1_mainTableGroupRankingTable > tr')
         .slice(1) // skip table header
         .map(function() {
             var cols = jquery(this).children();
-
-            ranking.push({
+            leagueId = cols.eq(1).html().match(/group_ID=(([0-9])*)/)[1];
+            return {
                 rank: +cols.eq(0).text(),
                 team: cols.eq(1).text(),
                 games: +cols.eq(2).text(),
                 ballquotient: parseFloat(cols.eq(6).text()),
                 points: +cols.eq(7).text()
-            });
-        });
+            };
+        }).get();
 
     return {
+        'leagueId': leagueId,
         'games': games,
         'ranking': ranking
     };
