@@ -1,8 +1,10 @@
 /*jslint node: true */
 "use strict";
 
-function scrape(jquery) {
-    var rows = jquery('table.tx_clicsvws_pi1_mainTableGroupResultsTable tr');
+var isNode = require('detect-node');
+
+function scrape($, doc) {
+    var rows = $(doc).find('table.tx_clicsvws_pi1_mainTableGroupResultsTable tr');
     if (!rows || rows.length < 2) {
         console.log(rows);
         throw ("failed to scrape league");
@@ -11,7 +13,7 @@ function scrape(jquery) {
     var games = rows
         .slice(1) // skip table header
         .map(function() { // map rows to document
-            var cols = jquery(this).children();
+            var cols = $(this).children();
             return {
                 id: +cols.eq(1).text(),
                 team: cols.eq(3).text(),
@@ -25,10 +27,15 @@ function scrape(jquery) {
         }).get();
 
     var leagueId;
-    var ranking = jquery('table.tx_clicsvws_pi1_mainTableGroupRankingTable > tr')
+    var selector = 'table.tx_clicsvws_pi1_mainTableGroupRankingTable > tbody > tr';
+    if (isNode) {
+        selector = 'table.tx_clicsvws_pi1_mainTableGroupRankingTable > tr';
+    }
+
+    var ranking = $(doc).find(selector)
         .slice(1) // skip table header
         .map(function() {
-            var cols = jquery(this).children();
+            var cols = $(this).children();
             leagueId = cols.eq(1).html().match(/group_ID=(([0-9])*)/)[1];
             return {
                 rank: +cols.eq(0).text(),

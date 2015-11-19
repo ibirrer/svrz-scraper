@@ -13,8 +13,8 @@ describe("scrape", function() {
 
     it("normal", function() {
 
-        var jquery = cheerio.load(html);
-        var scraped = scraper.scrape(jquery);
+        var $ = cheerio.load(html);
+        var scraped = scraper.scrape($, $('body'));
 
         expect(scraped.leagueId).toBe("9446");
 
