@@ -1,23 +1,8 @@
 /*jslint node: true */
 "use strict";
 
-/**
- * Usage in node;
- *
- * var request = require('request');
- * var scraper = require('svrz-scraper');
- *
- * request(scraper.urlFromLeagueId(leagueId), function(error, response, body) {
- *     var scraped = scraper.scrape(body);
- *     console.log(scraped);
- * });
- */
-
-var cheerio = require("cheerio");
-
-function scrape(html) {
-    var $ = cheerio.load(html);
-    var rows = $('table.tx_clicsvws_pi1_mainTableGroupResultsTable tr');
+function scrape(jquery) {
+    var rows = jquery('table.tx_clicsvws_pi1_mainTableGroupResultsTable tr');
     if (!rows || rows.length < 2) {
         console.log(rows);
         throw ("failed to scrape league");
@@ -27,7 +12,7 @@ function scrape(html) {
     rows
         .slice(1) // skip table header
         .each(function() { // map rows to document
-            var cols = $(this).children();
+            var cols = jquery(this).children();
             games.push({
                 id: +cols.eq(1).text(),
                 team: cols.eq(3).text(),
@@ -43,10 +28,10 @@ function scrape(html) {
         });
 
     var ranking = [];
-    $('table.tx_clicsvws_pi1_mainTableGroupRankingTable > tr')
+    jquery('table.tx_clicsvws_pi1_mainTableGroupRankingTable > tr')
         .slice(1) // skip table header
         .map(function() {
-            var cols = $(this).children();
+            var cols = jquery(this).children();
 
             ranking.push({
                 rank: +cols.eq(0).text(),

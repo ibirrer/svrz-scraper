@@ -1,16 +1,20 @@
 /*jslint node: true, jasmine: true, esnext: true */
 "use strict";
 
-var scraper = require("../index.js");
 var fs = require("fs");
+var cheerio = require("cheerio");
+
+var scraper = require("../index.js");
 
 describe("scrape", function() {
-    it("normal", function() {
-        var html = fs.readFileSync("spec/razfaz.html", {
-            encoding: "utf8"
-        });
+    var html = fs.readFileSync("spec/razfaz.html", {
+        encoding: "utf8"
+    });
 
-        var scraped = scraper.scrape(html);
+    it("normal", function() {
+
+        var jquery = cheerio.load(html);
+        var scraped = scraper.scrape(jquery);
 
         expect(scraped.ranking.map(x => x.rank)).toEqual([1, 2, 3, 4, 5]);
         expect(scraped.ranking[3].team).toBe("Raz Faz");
