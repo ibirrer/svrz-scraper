@@ -1,38 +1,25 @@
 /*jslint node: true */
 "use strict";
 
-var cheerio = require("cheerio");
-var request = require('request');
-
 /**
- * Scrapes the tournament schedule, ranking and game results from
- * http://www.svrz.ch/index.php?id=73&nextPage=1&group_ID=<leagueId>
+ * Usage in node;
+ *
+ * var request = require('request');
+ * var scraper = require('svrz-scraper');
+ *
+ * request(scraper.urlFromLeagueId(leagueId), function(error, response, body) {
+ *     var scraped = scraper.scrape(body);
+ *     console.log(scraped);
+ * });
  */
-function scrape(leagueId, callback) {
-    var url = "http://www.svrz.ch/index.php?id=73&nextPage=1&group_ID=" + leagueId;
 
-    console.log("scraping " + url);
+var cheerio = require("cheerio");
 
-    request(url, function(error, response, body) {
-        if (error || response.statusCode != 200) {
-            callback("error during request. url: " + url + ", error: " + error, null);
-            return;
-        }
-
-        var scraped = scrapeLeague(body);
-
-        // TODO: also set league name, short name etc.
-        scraped.leagueId = leagueId;
-        callback(null, scraped);
-    });
-}
-
-
-function scrapeLeague(html) {
+function scrape(html) {
     var $ = cheerio.load(html);
     var rows = $('table.tx_clicsvws_pi1_mainTableGroupResultsTable tr');
     if (!rows || rows.length < 2) {
-        console.log(html);
+        console.log(rows);
         throw ("failed to scrape league");
     }
 
@@ -76,10 +63,14 @@ function scrapeLeague(html) {
     };
 }
 
-// Converts a date from '02.10.13' to 20130302
+function urlFromLeagueId(leagueId) {
+    return "http://www.svrz.ch/index.php?id=73&nextPage=1&group_ID=" + leagueId;
+}
+
+// Converts a date from '02.10.13' to '20130302'
 function convertDate(date) {
     var p = date.split('.');
-    return +('20' + p[2] + p[1] + p[0]);
+    return '20' + p[2] + p[1] + p[0];
 }
 
 // Converts a result from '3:1' to { home: 3, away: 1 }. Converts to null if result is empty
@@ -100,5 +91,6 @@ function extractTeamIdFromLink(link) {
 }
 
 module.exports = {
-    scrape: scrape
+    scrape: scrape,
+    urlFromLeagueId: urlFromLeagueId
 };
