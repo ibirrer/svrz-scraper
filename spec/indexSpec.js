@@ -20,6 +20,7 @@ describe("scrape", function() {
 
         expect(scraped.ranking.map(x => x.rank)).toEqual([1, 2, 3, 4, 5]);
         expect(scraped.ranking[3].team).toBe("Raz Faz");
+        expect(scraped.ranking[3].teamId).toBe(25649);
         expect(scraped.ranking[3].games).toBe(3);
         expect(scraped.ranking[3].ballquotient).toBe(0.95);
         expect(scraped.ranking[3].points).toBe(3);

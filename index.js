@@ -40,6 +40,7 @@ function scrape($, doc) {
             return {
                 rank: +cols.eq(0).text(),
                 team: cols.eq(1).text(),
+                teamId: +extractTeamIdFromLink(cols.eq(1).find('a').attr("href")),
                 games: +cols.eq(2).text(),
                 ballquotient: parseFloat(cols.eq(6).text()),
                 points: +cols.eq(7).text()
