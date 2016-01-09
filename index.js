@@ -60,7 +60,12 @@ function urlFromLeagueId(leagueId) {
 // Converts a date from '02.10.13' to '2013-03-02'
 function convertDate(date) {
     var p = date.split('.');
-    return '20' + p[2] + "-" + p[1] + "-" + + p[0];
+    return '20' + p[2] + "-" + pad(p[1]) + "-" + pad(p[0]);
+}
+
+function pad(num) {
+    var s = "000000000" + num;
+    return s.substr(s.length-2);
 }
 
 // Converts a result from '3:1' to { home: 3, away: 1 }. Converts to null if result is empty
