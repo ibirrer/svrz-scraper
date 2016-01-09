@@ -18,8 +18,7 @@ function scrape($, doc) {
                 id: +cols.eq(1).text(),
                 team: cols.eq(3).text(),
                 teamId: +extractTeamIdFromLink(cols.eq(3).find('a').attr("href")),
-                date: convertDate(cols.eq(0).text().slice(0, 8)),
-                time: cols.eq(0).text().slice(9),
+                datetime: convertDate(cols.eq(0).text().slice(0, 8)) + "T" + cols.eq(0).text().slice(9) + ":00Z",
                 opponent: cols.eq(5).text(),
                 opponentId: +extractTeamIdFromLink(cols.eq(5).find('a').attr("href")),
                 result: convertResult(cols.eq(6).text())
@@ -58,10 +57,10 @@ function urlFromLeagueId(leagueId) {
     return "http://www.svrz.ch/index.php?id=73&nextPage=1&group_ID=" + leagueId;
 }
 
-// Converts a date from '02.10.13' to '20130302'
+// Converts a date from '02.10.13' to '2013-03-02'
 function convertDate(date) {
     var p = date.split('.');
-    return '20' + p[2] + p[1] + p[0];
+    return '20' + p[2] + "-" + p[1] + "-" + + p[0];
 }
 
 // Converts a result from '3:1' to { home: 3, away: 1 }. Converts to null if result is empty

@@ -28,8 +28,7 @@ describe("scrape", function() {
         expect(scraped.games[0].id).toBe(113191);
         expect(scraped.games[0].team).toBe("Raz Faz");
         expect(scraped.games[0].teamId).toBe(25649);
-        expect(scraped.games[0].date).toBe("20151020");
-        expect(scraped.games[0].time).toBe("20:15");
+        expect(scraped.games[0].datetime).toBe("2015-10-20T20:15:00Z");
         expect(scraped.games[0].opponent).toBe("Pläuschler Einsiedeln");
         expect(scraped.games[0].opponentId).toBe(25745);
         expect(scraped.games[0].result).toEqual({
