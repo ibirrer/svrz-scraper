@@ -3,6 +3,32 @@
 
 var isNode = require('detect-node');
 
+function scrapeDetail($, doc) {
+    var setsRow = $(doc).find('table.tx_clicsvws_pi1_mainTableGroup:nth-child(8) tr:nth-child(11) > td:nth-child(2)');
+    var setsRowSplitted = zip(setsRow.text()
+        .split(" ")
+        .map(function (x) { return x.split(":") })
+        );
+
+    var gymName = $(doc).find('table.tx_clicsvws_pi1_mainTableGroup:nth-child(8) tr:nth-child(7) > td:nth-child(2) > a:nth-child(1)')
+        .text();
+
+    var map = $(doc).find('table.tx_clicsvws_pi1_mainTableGroup:nth-child(8) tr:nth-child(7) > td:nth-child(2) > a:nth-child(3)')
+        .attr("href");
+
+    return {
+        setsResults: {
+            home: setsRowSplitted[0].map(toInt),
+            away: setsRowSplitted[1].map(toInt)
+        },
+
+        gym: {
+            name: gymName,
+            map: map
+        }
+    };
+};
+
 function scrape($, doc) {
     var rows = $(doc).find('table.tx_clicsvws_pi1_mainTableGroupResultsTable tr');
     if (!rows || rows.length < 2) {
@@ -12,7 +38,7 @@ function scrape($, doc) {
 
     var games = rows
         .slice(1) // skip table header
-        .map(function() { // map rows to document
+        .map(function () { // map rows to document
             var cols = $(this).children();
             return {
                 id: +cols.eq(1).text(),
@@ -33,7 +59,7 @@ function scrape($, doc) {
 
     var ranking = $(doc).find(selector)
         .slice(1) // skip table header
-        .map(function() {
+        .map(function () {
             var cols = $(this).children();
             leagueId = cols.eq(1).html().match(/group_ID=(([0-9])*)/)[1];
             return {
@@ -42,7 +68,7 @@ function scrape($, doc) {
                 teamId: +extractTeamIdFromLink(cols.eq(1).find('a').attr("href")),
                 games: +cols.eq(2).text(),
                 ballquotient: parseFloat(cols.eq(6).text()),
-                points: +cols.eq(7).text()
+                points: +cols.eq(7).text(),
             };
         }).get();
 
@@ -65,7 +91,7 @@ function convertDate(date) {
 
 function pad(num) {
     var s = "000000000" + num;
-    return s.substr(s.length-2);
+    return s.substr(s.length - 2);
 }
 
 // Converts a result from '3:1' to { home: 3, away: 1 }. Converts to null if result is empty
@@ -85,7 +111,19 @@ function extractTeamIdFromLink(link) {
     return /team_ID=([0-9]{5})/.exec(link)[1];
 }
 
+function toInt(x) {
+    return +x;
+}
+
+// form http://stackoverflow.com/questions/4856717/javascript-equivalent-of-pythons-zip-function
+function zip(arrays) {
+    return arrays[0].map(function (_, i) {
+        return arrays.map(function (array) { return array[i] })
+    });
+}
+
 module.exports = {
     scrape: scrape,
+    scrapeDetail: scrapeDetail,
     urlFromLeagueId: urlFromLeagueId
 };
