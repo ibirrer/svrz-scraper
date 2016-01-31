@@ -6,14 +6,14 @@ var cheerio = require("cheerio");
 
 var scraper = require("../index.js");
 
-describe("scrape", function() {
-    var html = fs.readFileSync("spec/razfaz.html", {
-        encoding: "utf8"
-    });
+describe("scrape", function () {
+    it("overview page", function () {
 
-    it("normal", function() {
+        var overviewPage = fs.readFileSync("spec/razfaz.html", {
+            encoding: "utf8"
+        });
 
-        var $ = cheerio.load(html);
+        var $ = cheerio.load(overviewPage);
         var scraped = scraper.scrape($, $('body'));
 
         expect(scraped.leagueId).toBe("9446");
@@ -34,6 +34,25 @@ describe("scrape", function() {
         expect(scraped.games[0].result).toEqual({
             home: 3,
             away: 0
+        });
+    });
+
+    it("detail page", function () {
+        var detailPage = fs.readFileSync("spec/razfaz-detail.html", {
+            encoding: "utf8"
+        });
+
+        var $ = cheerio.load(detailPage);
+        var game = scraper.scrapeDetail($, $('body'));
+
+        expect(game.setsResults).toEqual({
+            home: [25, 25, 26],
+            away: [22, 19, 24]
+        });
+
+        expect(game.gym).toEqual({
+            name: "Turnhaus an der Egg, Zürich",
+            map: "http://maps.google.ch/?daddr=Kilchbergstrasse+34+8038+Z%C3%BCrich"
         });
     });
 });
