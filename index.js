@@ -63,7 +63,9 @@ function scrape($, doc) {
                 datetime: convertDate(cols.eq(0).text().slice(0, 8)) + "T" + cols.eq(0).text().slice(9) + ":00Z",
                 opponent: cols.eq(5).text(),
                 opponentId: +extractTeamIdFromLink(cols.eq(5).find('a').attr("href")),
-                result: convertResult(cols.eq(6).text())
+                result: convertResult(cols.eq(6).text()),
+                setsResults: null,
+                gym: null
             };
         }).get();
 

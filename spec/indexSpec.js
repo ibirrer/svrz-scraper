@@ -35,6 +35,8 @@ describe("scrape", function () {
             home: 3,
             away: 0
         });
+        expect(scraped.games[0].setsResults).toBeNull();
+        expect(scraped.games[0].gym).toBeNull();
     });
 
     it("detail page", function () {
