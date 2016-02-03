@@ -55,4 +55,20 @@ describe("scrape", function () {
             map: "http://maps.google.ch/?daddr=Kilchbergstrasse+34+8038+Z%C3%BCrich"
         });
     });
+
+    it("detail page no result", function () {
+        var detailPage = fs.readFileSync("spec/razfaz-detail-noresult.html", {
+            encoding: "utf8"
+        });
+
+        var $ = cheerio.load(detailPage);
+        var game = scraper.scrapeDetail($, $('body'));
+
+        expect(game.setsResults).toBeNull();
+
+        expect(game.gym).toEqual({
+            name: "Turnhalle Gross, Gross",
+            map: "http://maps.google.ch/?daddr=Neumattstrasse+10+8841+Gross"
+        });
+    });
 });

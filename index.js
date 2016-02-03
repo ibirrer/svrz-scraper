@@ -4,11 +4,19 @@
 var isNode = require('detect-node');
 
 function scrapeDetail($, doc) {
+    var setsResult = null;
     var setsRow = $(doc).find('table.tx_clicsvws_pi1_mainTableGroup:nth-child(8) tr:nth-child(11) > td:nth-child(2)');
-    var setsRowSplitted = zip(setsRow.text()
-        .split(" ")
-        .map(function (x) { return x.split(":") })
-        );
+    if (setsRow.text() !== "") {
+        var setsRowSplitted = zip(setsRow.text()
+            .split(" ")
+            .map(function (x) { return x.split(":") })
+            );
+
+        setsResult = {
+            home: setsRowSplitted[0].map(toInt),
+            away: setsRowSplitted[1].map(toInt)
+        }
+    }
 
     var gymName = $(doc).find('table.tx_clicsvws_pi1_mainTableGroup:nth-child(8) tr:nth-child(7) > td:nth-child(2) > a:nth-child(1)')
         .text();
@@ -16,11 +24,15 @@ function scrapeDetail($, doc) {
     var map = $(doc).find('table.tx_clicsvws_pi1_mainTableGroup:nth-child(8) tr:nth-child(7) > td:nth-child(2) > a:nth-child(3)')
         .attr("href");
 
+    // if gym map is not available on sportstätten.ch, the google maps link is on second position
+    if( !map ) {
+        map = $(doc).find('table.tx_clicsvws_pi1_mainTableGroup:nth-child(8) tr:nth-child(7) > td:nth-child(2) > a:nth-child(2)')
+        .attr("href");
+    }
+
+
     return {
-        setsResults: {
-            home: setsRowSplitted[0].map(toInt),
-            away: setsRowSplitted[1].map(toInt)
-        },
+        setsResults: setsResult,
 
         gym: {
             name: gymName,
