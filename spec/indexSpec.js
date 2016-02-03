@@ -45,6 +45,8 @@ describe("scrape", function () {
         var $ = cheerio.load(detailPage);
         var game = scraper.scrapeDetail($, $('body'));
 
+        expect(game.gameId).toBe(113191);
+
         expect(game.setsResults).toEqual({
             home: [25, 25, 26],
             away: [22, 19, 24]
@@ -63,6 +65,8 @@ describe("scrape", function () {
 
         var $ = cheerio.load(detailPage);
         var game = scraper.scrapeDetail($, $('body'));
+
+        expect(game.gameId).toBe(113201);
 
         expect(game.setsResults).toBeNull();
 

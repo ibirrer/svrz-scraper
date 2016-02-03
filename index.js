@@ -4,6 +4,10 @@
 var isNode = require('detect-node');
 
 function scrapeDetail($, doc) {
+    var gameId = +$(doc).find('table.tx_clicsvws_pi1_mainTableGroup:nth-child(8) tr:nth-child(1) > td:nth-child(2)')
+        .text();
+
+
     var setsResult = null;
     var setsRow = $(doc).find('table.tx_clicsvws_pi1_mainTableGroup:nth-child(8) tr:nth-child(11) > td:nth-child(2)');
     if (setsRow.text() !== "") {
@@ -25,15 +29,15 @@ function scrapeDetail($, doc) {
         .attr("href");
 
     // if gym map is not available on sportstätten.ch, the google maps link is on second position
-    if( !map ) {
+    if (!map) {
         map = $(doc).find('table.tx_clicsvws_pi1_mainTableGroup:nth-child(8) tr:nth-child(7) > td:nth-child(2) > a:nth-child(2)')
-        .attr("href");
+            .attr("href");
     }
 
 
     return {
+        gameId: gameId,
         setsResults: setsResult,
-
         gym: {
             name: gymName,
             map: map
