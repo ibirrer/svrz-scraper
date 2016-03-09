@@ -3,6 +3,8 @@
 
 var isNode = require('detect-node');
 
+var GENDER_MAP = { "Männer": "m", "Frauen": "f", "Mixed": "x" }
+
 function scrapeDetail($, doc) {
     var gameId = +$(doc).find('table.tx_clicsvws_pi1_mainTableGroup:nth-child(8) tr:nth-child(1) > td:nth-child(2)')
         .text();
@@ -46,6 +48,14 @@ function scrapeDetail($, doc) {
 };
 
 function scrape($, doc) {
+    // league
+    var leagueInfo = $(doc).find('.tx_clicsvws_pi1_mainTableGroup .content_title');
+    var splitted = leagueInfo.slice(0).eq(0).text().split(" - ");
+    var leagueLongName = splitted[0]
+    var leagueShortName = splitted[2]
+    var leagueGender = GENDER_MAP[splitted[1]]
+
+    // games
     var rows = $(doc).find('table.tx_clicsvws_pi1_mainTableGroupResultsTable tr');
     if (!rows || rows.length < 2) {
         console.log(rows);
@@ -69,6 +79,7 @@ function scrape($, doc) {
             };
         }).get();
 
+    // ranking
     var leagueId;
     var selector = 'table.tx_clicsvws_pi1_mainTableGroupRankingTable > tbody > tr';
     if (isNode) {
@@ -91,6 +102,9 @@ function scrape($, doc) {
         }).get();
 
     return {
+        'leagueLongName': leagueLongName,
+        'leagueShortName': leagueShortName,
+        'leagueGender': leagueGender,
         'leagueId': leagueId,
         'games': games,
         'ranking': ranking

@@ -17,6 +17,10 @@ describe("scrape", function () {
         var scraped = scraper.scrape($, $('body'));
 
         expect(scraped.leagueId).toBe("9446");
+        expect(scraped.leagueLongName).toBe("Zürimeisterschaft ZM1");
+        expect(scraped.leagueShortName).toBe("Zm H1")
+        expect(scraped.leagueGender).toBe("m")
+
 
         expect(scraped.ranking.map(x => x.rank)).toEqual([1, 2, 3, 4, 5]);
         expect(scraped.ranking[3].team).toBe("Raz Faz");
